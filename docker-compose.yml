@@ -18,7 +18,7 @@ services:
             - db
             - memcached
         networks:
-            - bitrix
+            - bitrix24
         restart: always
     web_server:
         build: ./${WEB_SERVER_TYPE}
@@ -33,7 +33,7 @@ services:
         links:
             - php
         networks: 
-            - bitrix
+            - bitrix24
         restart: always
     db:
         build: ./${DB_SERVER_TYPE}
@@ -49,7 +49,7 @@ services:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
         command: mysqld --sql-mode=""
         networks:
-            - bitrix
+            - bitrix24
         restart: always
     memcached:
         image: memcached:1.5-alpine
@@ -59,7 +59,7 @@ services:
         ports:
             - '38211:11211'
         networks:
-            - bitrix
+            - bitrix24
         restart: always
     adminer:
         image: dockette/adminer:full
@@ -71,7 +71,7 @@ services:
         environment:
             UPLOAD: 1024M # upload_max_filesize, post_max_size
         networks:
-            - bitrix
+            - bitrix24
     source:
         image: alpine:latest
         container_name: ${PROJECT}source
@@ -80,9 +80,9 @@ services:
             - /home/VladislavOstryakov/Web/www/html:/var/www/html
             - /home/VladislavOstryakov/Web/www/bitrix:/var/www/bitrix
         networks:
-            - bitrix
+            - bitrix24
 networks:
-    bitrix:
+    bitrix24:
         driver: bridge
         ipam:
             driver: default
