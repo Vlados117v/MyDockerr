@@ -28,8 +28,8 @@ services:
         volumes_from:
             - source
         ports:
-            - '${INTERFACE}:3080:80'
-            - '${INTERFACE}:30443:443'
+            - '3080:80'
+            - '30443:443'
         links:
             - php
         networks: 
@@ -41,7 +41,7 @@ services:
         volumes_from:
             - source
         ports:
-            - '${INTERFACE}:30306:3306'
+            - '30306:3306'
         environment:
             MYSQL_DATABASE: ${MYSQL_DATABASE}
             MYSQL_USER: ${MYSQL_USER}
@@ -57,7 +57,7 @@ services:
         volumes_from:
             - source
         ports:
-            - '${INTERFACE}:30211:11211'
+            - '30211:11211'
         networks:
             - bitrix
         restart: always
@@ -67,7 +67,7 @@ services:
         links:
             - db:db
         ports:
-            - '${INTERFACE}:9080:80'
+            - '9080:80'
         environment:
             UPLOAD: 1024M # upload_max_filesize, post_max_size
         networks:
