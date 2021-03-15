@@ -13,7 +13,7 @@ services:
         volumes_from:
             - source
         ports:
-            - '127.0.0.1:3000:9000'
+            - '127.0.0.1:3800:9000'
         links:
             - db
             - memcached
@@ -28,8 +28,8 @@ services:
         volumes_from:
             - source
         ports:
-            - '3080:80'
-            - '30443:443'
+            - '3880:80'
+            - '38443:443'
         links:
             - php
         networks: 
@@ -41,7 +41,7 @@ services:
         volumes_from:
             - source
         ports:
-            - '30306:3306'
+            - '3806:3306'
         environment:
             MYSQL_DATABASE: ${MYSQL_DATABASE}
             MYSQL_USER: ${MYSQL_USER}
@@ -57,7 +57,7 @@ services:
         volumes_from:
             - source
         ports:
-            - '30211:11211'
+            - '38211:11211'
         networks:
             - bitrix
         restart: always
@@ -67,7 +67,7 @@ services:
         links:
             - db:db
         ports:
-            - '9080:80'
+            - '3880:80'
         environment:
             UPLOAD: 1024M # upload_max_filesize, post_max_size
         networks:
