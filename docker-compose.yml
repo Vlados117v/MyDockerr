@@ -1,0 +1,90 @@
+version: '2'
+
+volumes:
+  site:
+  db:
+    driver: local
+
+
+services:
+    php:
+        build: ./${PHP_VERSION}
+        container_name: ${PROJECT}php
+        volumes_from:
+            - source
+        ports:
+            - '127.0.0.1:3000:9000'
+        links:
+            - db
+            - memcached
+        networks:
+            - bitrix
+        restart: always
+    web_server:
+        build: ./${WEB_SERVER_TYPE}
+        container_name: ${PROJECT}webserver
+        depends_on:
+            - source
+        volumes_from:
+            - source
+        ports:
+            - '${INTERFACE}:3080:80'
+            - '${INTERFACE}:30443:443'
+        links:
+            - php
+        networks: 
+            - bitrix
+        restart: always
+    db:
+        build: ./${DB_SERVER_TYPE}
+        container_name: ${PROJECT}db
+        volumes_from:
+            - source
+        ports:
+            - '${INTERFACE}:30306:3306'
+        environment:
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        command: mysqld --sql-mode=""
+        networks:
+            - bitrix
+        restart: always
+    memcached:
+        image: memcached:1.5-alpine
+        container_name: ${PROJECT}memcached
+        volumes_from:
+            - source
+        ports:
+            - '${INTERFACE}:30211:11211'
+        networks:
+            - bitrix
+        restart: always
+    adminer:
+        image: dockette/adminer:full
+        container_name: ${PROJECT}adminer
+        links:
+            - db:db
+        ports:
+            - '${INTERFACE}:9080:80'
+        environment:
+            UPLOAD: 1024M # upload_max_filesize, post_max_size
+        networks:
+            - bitrix
+    source:
+        image: alpine:latest
+        container_name: ${PROJECT}source
+        volumes:
+            - /home/VladislavOstryakov/Web/www/mysql:/var/lib/mysql
+            - /home/VladislavOstryakov/Web/www/html:/var/www/html
+            - /home/VladislavOstryakov/Web/www/bitrix:/var/www/bitrix
+        networks:
+            - bitrix
+networks:
+    bitrix:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: 10.100.0.0/24
